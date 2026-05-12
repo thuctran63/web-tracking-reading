@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Reading Tracker",
-  description: "Track daily reading reports with a GitHub-style calendar.",
+  description: "Theo dõi tiến độ đọc sách hằng ngày với calendar kiểu GitHub.",
 };
 
 export default function RootLayout({
@@ -25,10 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="vi"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         <Providers>{children}</Providers>
       </body>
     </html>

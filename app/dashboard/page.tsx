@@ -1,12 +1,14 @@
 import { format } from "date-fns";
+import { BookOpenCheck, Flame, ScrollText, TrendingUp } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 import { AdminDashboard } from "@/components/admin-dashboard";
-import { LogoutButton } from "@/components/logout-button";
+import { DashboardShell } from "@/components/dashboard-shell";
 import { ReadingHeatmap } from "@/components/reading-heatmap";
 import { ReportForm } from "@/components/report-form";
 import { ReportList } from "@/components/report-list";
+import { StatCard } from "@/components/ui/stat-card";
 import { connectToDatabase } from "@/lib/mongodb";
 import { authOptions } from "@/lib/auth";
 import { computeReadingStats } from "@/lib/report-utils";
@@ -15,7 +17,7 @@ import { User } from "@/models/User";
 import { DailyReportResponse } from "@/types/report";
 
 function mapReport(report: {
-  _id: string;
+  _id: unknown;
   date: Date;
   didRead: boolean;
   booksRead: string;
@@ -24,7 +26,7 @@ function mapReport(report: {
   questions: string;
 }): DailyReportResponse {
   return {
-    id: report._id.toString(),
+    id: String(report._id),
     date: report.date.toISOString().slice(0, 10),
     didRead: report.didRead,
     booksRead: report.booksRead,
@@ -53,26 +55,20 @@ export default async function DashboardPage() {
       .lean();
 
     return (
-      <main className="min-h-screen overflow-x-hidden bg-slate-50 px-3 py-4 md:px-6 md:py-5">
-        <div className="mx-auto flex w-full max-w-[1400px] flex-col">
-          <header className="mb-4 shrink-0 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-semibold text-zinc-900">Admin Dashboard</h1>
-              <p className="text-sm text-zinc-600">Xem tiến độ đọc theo từng user</p>
-            </div>
-            <LogoutButton />
-          </header>
-          <div className="min-h-0 flex-1 overflow-x-hidden">
-            <AdminDashboard
-              year={year}
-              initialUsers={users.map((user) => ({
-                id: user._id.toString(),
-                email: user.email,
-              }))}
-            />
-          </div>
-        </div>
-      </main>
+      <DashboardShell
+        email={session.user.email ?? "admin"}
+        role="admin"
+        title="Admin Dashboard"
+        subtitle="Xem tiến độ đọc sách của từng user trong năm."
+      >
+        <AdminDashboard
+          year={year}
+          initialUsers={users.map((user) => ({
+            id: String(user._id),
+            email: user.email,
+          }))}
+        />
+      </DashboardShell>
     );
   }
 
@@ -89,43 +85,57 @@ export default async function DashboardPage() {
   const stats = computeReadingStats(reports);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-slate-50 px-3 py-4 md:px-6 md:py-5">
-      <div className="mx-auto w-full max-w-[1400px]">
-        <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-semibold text-zinc-900">Reading Progress Dashboard</h1>
-            <p className="text-sm text-zinc-600">{targetUserLabel}</p>
-          </div>
-          <LogoutButton />
-        </header>
+    <DashboardShell
+      email={targetUserLabel}
+      role="user"
+      title={`Chào, ${targetUserLabel}`}
+      subtitle={`Tiến độ đọc sách năm ${year}. Hôm nay là ${format(new Date(), "EEEE, dd/MM/yyyy")}.`}
+    >
+      <section className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          label="Tổng report"
+          value={stats.totalReports}
+          icon={ScrollText}
+          tone="indigo"
+          hint="Số ngày đã có entry"
+        />
+        <StatCard
+          label="Số ngày có đọc"
+          value={stats.readDays}
+          icon={BookOpenCheck}
+          tone="emerald"
+          hint="Tính trong các ngày có report"
+        />
+        <StatCard
+          label="Tỉ lệ đọc"
+          value={`${stats.readingRate}%`}
+          icon={TrendingUp}
+          tone="sky"
+          footer={
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+              <div
+                className="h-full rounded-full bg-sky-500 transition-[width]"
+                style={{ width: `${stats.readingRate}%` }}
+              />
+            </div>
+          }
+        />
+        <StatCard
+          label="Best streak"
+          value={stats.bestStreak}
+          icon={Flame}
+          tone="amber"
+          hint="Chuỗi ngày đọc dài nhất"
+        />
+      </section>
 
-        <section className="mb-6 grid gap-3 md:grid-cols-4">
-          <div className="rounded-xl border border-zinc-200 bg-white p-4">
-            <p className="text-sm text-zinc-500">Tổng report</p>
-            <p className="text-xl font-semibold text-zinc-900">{stats.totalReports}</p>
-          </div>
-          <div className="rounded-xl border border-zinc-200 bg-white p-4">
-            <p className="text-sm text-zinc-500">Số ngày có đọc</p>
-            <p className="text-xl font-semibold text-zinc-900">{stats.readDays}</p>
-          </div>
-          <div className="rounded-xl border border-zinc-200 bg-white p-4">
-            <p className="text-sm text-zinc-500">Tỉ lệ đọc</p>
-            <p className="text-xl font-semibold text-zinc-900">{stats.readingRate}%</p>
-          </div>
-          <div className="rounded-xl border border-zinc-200 bg-white p-4">
-            <p className="text-sm text-zinc-500">Best streak</p>
-            <p className="text-xl font-semibold text-zinc-900">{stats.bestStreak}</p>
-          </div>
-        </section>
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <ReportForm initialReport={todayReport} />
-          <ReadingHeatmap reports={reports} year={year} />
-        </div>
-        <div className="mt-6">
-          <ReportList reports={reports} />
-        </div>
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+        <ReportForm initialReport={todayReport} />
+        <ReadingHeatmap reports={reports} year={year} />
       </div>
-    </main>
+      <div className="mt-5">
+        <ReportList reports={reports} />
+      </div>
+    </DashboardShell>
   );
 }
