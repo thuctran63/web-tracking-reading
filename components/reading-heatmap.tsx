@@ -1,3 +1,5 @@
+"use client";
+
 import {
   eachDayOfInterval,
   endOfMonth,
@@ -7,6 +9,7 @@ import {
   startOfDay,
   startOfMonth,
 } from "date-fns";
+import { useState } from "react";
 
 import {
   Card,
@@ -89,6 +92,15 @@ export function ReadingHeatmap({
   const totalReports = reports.length;
   const readDays = reports.filter((report) => report.didRead).length;
 
+  const [tappedDay, setTappedDay] = useState<string | null>(null);
+
+  function handleDayTap(key: string) {
+    setTappedDay((prev) => (prev === key ? null : key));
+  }
+
+  const tappedReport = tappedDay ? reportMap.get(tappedDay) : null;
+  const tappedDayEntry = tappedDay ? dayMap.get(tappedDay) : null;
+
   return (
     <Card className={cn("flex min-h-[420px] flex-col", className)} as="section">
       <CardHeader
@@ -103,7 +115,7 @@ export function ReadingHeatmap({
       >
         <CardTitle>Calendar đọc sách năm {year}</CardTitle>
         <CardDescription>
-          Mỗi ô là 1 ngày — hover để xem chi tiết.
+          Bấm hoặc hover vào ô để xem chi tiết từng ngày.
         </CardDescription>
       </CardHeader>
 
@@ -151,6 +163,7 @@ export function ReadingHeatmap({
                     const hasReport = entry?.hasReport ?? false;
                     const didRead = entry?.didRead ?? false;
                     const report = reportMap.get(key);
+                    const isTapped = tappedDay === key;
                     return (
                       <div
                         key={key}
@@ -161,11 +174,24 @@ export function ReadingHeatmap({
                           didRead,
                           report?.booksRead,
                         )}
-                        className={cn(
-                          "heatmap-cell aspect-square w-full",
-                          dayClass(isFuture, hasReport, didRead),
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => handleDayTap(key)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") handleDayTap(key);
+                        }}
+                        aria-label={tooltipFor(
+                          key,
+                          isFuture,
+                          hasReport,
+                          didRead,
+                          report?.booksRead,
                         )}
-                        aria-label={key}
+                        className={cn(
+                          "heatmap-cell aspect-square w-full cursor-pointer",
+                          dayClass(isFuture, hasReport, didRead),
+                          isTapped && "ring-2 ring-indigo-500 ring-offset-1",
+                        )}
                       />
                     );
                   })}
@@ -174,6 +200,35 @@ export function ReadingHeatmap({
             );
           })}
         </div>
+
+        {tappedDay && (tappedReport || tappedDayEntry) ? (
+          <div className="mt-4 animate-fade-in rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+            <div className="flex items-start justify-between gap-2">
+              <p className="font-medium text-slate-900">{tappedDay}</p>
+              <button
+                type="button"
+                onClick={() => setTappedDay(null)}
+                className="text-xs text-slate-400 hover:text-slate-600"
+                aria-label="Đóng"
+              >
+                ✕
+              </button>
+            </div>
+            {tappedReport ? (
+              <p className="mt-1 text-slate-600">
+                {tappedReport.didRead
+                  ? `Đã đọc${tappedReport.booksRead?.trim() ? ` — ${tappedReport.booksRead.trim()}` : ""}`
+                  : "Hôm này nghỉ"}
+              </p>
+            ) : (
+              <p className="mt-1 text-slate-400 italic">
+                {tappedDayEntry?.hasReport
+                  ? "Đã có report — không có chi tiết"
+                  : "Chưa có report"}
+              </p>
+            )}
+          </div>
+        ) : null}
       </CardContent>
 
       <div className="flex flex-wrap items-center gap-4 border-t border-slate-100 px-5 py-3 text-xs text-slate-600">

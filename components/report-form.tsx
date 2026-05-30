@@ -11,7 +11,7 @@ import {
   Save,
   Sparkles,
 } from "lucide-react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -88,12 +88,17 @@ const fieldsMeta: Record<
 
 type Status =
   | { type: "idle" }
+  | { type: "saving" }
   | { type: "success"; message: string }
   | { type: "error"; message: string };
 
 export function ReportForm({ initialReport, className }: ReportFormProps) {
   const [status, setStatus] = useState<Status>({ type: "idle" });
-  const { register, handleSubmit, setValue, control, formState, reset } =
+  const statusTimer = useRef<ReturnType<typeof setTimeout>>(null);
+  const buttonTimer = useRef<ReturnType<typeof setTimeout>>(null);
+  const [justSaved, setJustSaved] = useState(false);
+
+  const { register, handleSubmit, setValue, control, reset } =
     useForm<FormData>({
       resolver: zodResolver(formSchema),
       defaultValues: {
@@ -120,8 +125,28 @@ export function ReportForm({ initialReport, className }: ReportFormProps) {
   const didRead = useWatch({ control, name: "didRead" });
   const watchedValues = useWatch({ control });
 
+  useEffect(() => {
+    if (status.type === "success" || status.type === "error") {
+      statusTimer.current = setTimeout(() => {
+        setStatus({ type: "idle" });
+      }, 3000);
+    }
+    return () => {
+      if (statusTimer.current) clearTimeout(statusTimer.current);
+    };
+  }, [status.type]);
+
+  useEffect(() => {
+    if (justSaved) {
+      buttonTimer.current = setTimeout(() => setJustSaved(false), 2000);
+    }
+    return () => {
+      if (buttonTimer.current) clearTimeout(buttonTimer.current);
+    };
+  }, [justSaved]);
+
   const onSubmit = handleSubmit(async (data) => {
-    setStatus({ type: "idle" });
+    setStatus({ type: "saving" });
     const response = await fetch("/api/reports", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -134,6 +159,7 @@ export function ReportForm({ initialReport, className }: ReportFormProps) {
     }
 
     setStatus({ type: "success", message: "Đã lưu report cho ngày này." });
+    setJustSaved(true);
   });
 
   return (
@@ -208,7 +234,16 @@ export function ReportForm({ initialReport, className }: ReportFormProps) {
                     {...register(key)}
                   />
                   <div className="mt-1 flex justify-end text-[11px] tabular-nums text-slate-400">
-                    {value.length}/{meta.max}
+                    <span
+                      className={cn(
+                        value.length >= meta.max * 0.9
+                          ? "text-amber-600 font-medium"
+                          : "",
+                      )}
+                    >
+                      {value.length}
+                    </span>
+                    /{meta.max}
                   </div>
                 </div>
               );
@@ -216,13 +251,13 @@ export function ReportForm({ initialReport, className }: ReportFormProps) {
           </div>
 
           {status.type === "success" ? (
-            <div className="flex items-start gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-700">
+            <div className="animate-fade-in flex items-start gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-700">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
               <span>{status.message}</span>
             </div>
           ) : null}
           {status.type === "error" ? (
-            <div className="flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2.5 text-sm text-rose-700">
+            <div className="animate-fade-in flex items-start gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2.5 text-sm text-rose-700">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
               <span>{status.message}</span>
             </div>
@@ -235,10 +270,20 @@ export function ReportForm({ initialReport, className }: ReportFormProps) {
             </p>
             <Button
               type="submit"
-              loading={formState.isSubmitting}
-              leftIcon={<Save className="h-4 w-4" />}
+              loading={status.type === "saving"}
+              leftIcon={
+                justSaved ? (
+                  <CheckCircle2 className="h-4 w-4" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )
+              }
+              className={cn(
+                justSaved &&
+                  "bg-emerald-500 hover:bg-emerald-600 shadow-[0_2px_8px_rgba(14,124,110,0.25)]",
+              )}
             >
-              Lưu report
+              {justSaved ? "Đã lưu" : status.type === "saving" ? "Đang lưu..." : "Lưu report"}
             </Button>
           </div>
         </form>
