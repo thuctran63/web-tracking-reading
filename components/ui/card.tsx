@@ -11,7 +11,7 @@ export function Card({ className, as = "div", ...props }: CardProps) {
   return (
     <Comp
       className={cn(
-        "rounded-2xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_1px_3px_rgba(15,23,42,0.06)]",
+        "rounded-2xl border border-slate-200 bg-white shadow-sm",
         className,
       )}
       {...props}

@@ -9,32 +9,32 @@ const tones: Record<Tone, { iconBg: string; iconColor: string; ring: string }> =
   indigo: {
     iconBg: "bg-indigo-50",
     iconColor: "text-indigo-600",
-    ring: "ring-indigo-100",
+    ring: "ring-indigo-200",
   },
   emerald: {
     iconBg: "bg-emerald-50",
     iconColor: "text-emerald-600",
-    ring: "ring-emerald-100",
+    ring: "ring-emerald-200",
   },
   sky: {
     iconBg: "bg-sky-50",
     iconColor: "text-sky-600",
-    ring: "ring-sky-100",
+    ring: "ring-sky-200",
   },
   amber: {
     iconBg: "bg-amber-50",
     iconColor: "text-amber-600",
-    ring: "ring-amber-100",
+    ring: "ring-amber-200",
   },
   rose: {
     iconBg: "bg-rose-50",
     iconColor: "text-rose-600",
-    ring: "ring-rose-100",
+    ring: "ring-rose-200",
   },
   slate: {
     iconBg: "bg-slate-100",
     iconColor: "text-slate-600",
-    ring: "ring-slate-100",
+    ring: "ring-slate-200",
   },
 };
 
@@ -61,7 +61,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-shadow hover:shadow-[0_4px_12px_rgba(15,23,42,0.06)]",
+        "group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
         className,
       )}
     >
@@ -70,7 +70,7 @@ export function StatCard({
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
             {label}
           </p>
-          <p className="mt-1.5 text-2xl font-semibold text-slate-900 tabular-nums">
+          <p className="mt-1.5 text-2xl font-bold text-slate-900 tabular-nums">
             {value}
           </p>
           {hint ? <p className="mt-1 text-xs text-slate-500">{hint}</p> : null}

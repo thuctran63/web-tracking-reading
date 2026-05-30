@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export function LogoutButton() {
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size="sm"
       onClick={() => signOut({ callbackUrl: "/login" })}
       leftIcon={<LogOut className="h-3.5 w-3.5" />}

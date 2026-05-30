@@ -277,12 +277,13 @@ function UserHero({
 }) {
   const gradient = avatarGradient(email);
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-indigo-50/60 via-white to-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-      <div className="flex items-center justify-between gap-3">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <div className="bg-radial-accent pointer-events-none absolute inset-0" />
+      <div className="relative flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           <span
             className={cn(
-              "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br text-base font-semibold text-white shadow-sm",
+              "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br text-base font-semibold text-white shadow-sm ring-1 ring-black/5",
               gradient,
             )}
             aria-hidden
@@ -290,10 +291,10 @@ function UserHero({
             {avatarInitial(email)}
           </span>
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-indigo-600">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-indigo-500">
               Đang xem
             </p>
-            <h2 className="mt-0.5 truncate text-lg font-semibold text-slate-900">
+            <h2 className="mt-0.5 truncate text-lg font-bold text-slate-900">
               {email}
             </h2>
             <p className="text-xs text-slate-500">Tiến độ năm {year}</p>
@@ -332,10 +333,10 @@ function UsersSidebar({
   onSelect: (id: string) => void;
 }) {
   return (
-    <aside className="flex h-fit flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04)] lg:sticky lg:top-20 lg:max-h-[calc(100vh-104px)]">
+    <aside className="flex h-fit flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:sticky lg:top-20 lg:max-h-[calc(100vh-104px)]">
       <div className="flex items-center justify-between gap-2 border-b border-slate-100 px-4 py-3">
         <div className="flex items-center gap-2">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50 text-indigo-500 ring-1 ring-indigo-200">
             <Users className="h-3.5 w-3.5" />
           </span>
           <h3 className="text-sm font-semibold text-slate-900">Người dùng</h3>
@@ -425,16 +426,16 @@ function UserItem({
         onClick={onClick}
         aria-pressed={active}
         className={cn(
-          "group relative flex w-full items-center gap-3 rounded-xl px-2.5 py-2 pl-3 text-left transition-colors",
+          "group relative flex w-full items-center gap-3 rounded-xl px-2.5 py-2 pl-3 text-left transition-all",
           active
-            ? "bg-indigo-50/70 ring-1 ring-indigo-200"
+            ? "bg-indigo-50/80 ring-1 ring-indigo-200 shadow-sm"
             : "hover:bg-slate-50",
         )}
       >
         <span
           aria-hidden
           className={cn(
-            "absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r-full bg-indigo-600 transition-opacity",
+            "absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-r-full bg-indigo-500 transition-opacity",
             active ? "opacity-100" : "opacity-0",
           )}
         />

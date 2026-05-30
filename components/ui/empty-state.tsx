@@ -27,7 +27,7 @@ export function EmptyState({
     >
       {Icon ? (
         <span
-          className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-500 ring-1 ring-indigo-100"
+          className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-500 ring-1 ring-indigo-200"
           aria-hidden
         >
           <Icon className="h-6 w-6" />

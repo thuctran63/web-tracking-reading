@@ -78,7 +78,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         href="/"
         className="mb-6 inline-flex items-center gap-2 text-sm text-slate-600 transition-colors hover:text-slate-900"
       >
-        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
+        <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500 text-white shadow-[0_2px_6px_rgba(212,82,42,0.2)]">
           <BookOpen className="h-4 w-4" />
         </span>
         <span className="font-semibold">Reading Tracker</span>
@@ -86,10 +86,10 @@ export function AuthForm({ mode }: AuthFormProps) {
 
       <form
         onSubmit={handleSubmit}
-        className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_rgba(15,23,42,0.04)] sm:p-7"
+        className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7"
       >
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-500 ring-1 ring-indigo-200">
             {isLogin ? <LogIn className="h-5 w-5" /> : <UserPlus className="h-5 w-5" />}
           </span>
           <div>

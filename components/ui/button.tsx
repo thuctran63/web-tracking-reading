@@ -16,11 +16,11 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-indigo-600 text-white shadow-sm hover:bg-indigo-500 active:bg-indigo-700 disabled:bg-indigo-300",
+    "bg-indigo-500 text-white shadow-[0_2px_8px_rgba(212,82,42,0.2)] hover:bg-indigo-600 hover:shadow-[0_4px_12px_rgba(212,82,42,0.3)] active:bg-indigo-700 disabled:bg-indigo-300 transition-all",
   secondary:
     "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 active:bg-indigo-200 disabled:opacity-60",
   outline:
-    "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 active:bg-slate-100 disabled:opacity-60",
+    "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 active:bg-slate-100 disabled:opacity-60 shadow-sm",
   ghost:
     "bg-transparent text-slate-600 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-60",
   danger:
@@ -55,7 +55,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       type={type}
       disabled={disabled || loading}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center font-medium transition-colors duration-150 disabled:cursor-not-allowed",
+        "inline-flex shrink-0 items-center justify-center font-medium transition-all duration-150 disabled:cursor-not-allowed",
         variants[variant],
         sizes[size],
         className,

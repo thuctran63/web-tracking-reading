@@ -28,7 +28,7 @@ export function DashboardShell({
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70">
         <div className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-4 px-4 py-3 md:px-6">
           <div className="flex items-center gap-2.5">
-            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm">
+            <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500 text-white shadow-[0_2px_8px_rgba(212,82,42,0.2)]">
               <BookOpen className="h-5 w-5" />
             </span>
             <div className="hidden sm:block">
@@ -57,7 +57,7 @@ export function DashboardShell({
               )}
               {isAdmin ? "Admin" : "User"}
             </span>
-            <span className="hidden max-w-[220px] truncate text-sm text-slate-700 md:inline">
+            <span className="hidden max-w-[220px] truncate text-sm text-slate-600 md:inline">
               {email}
             </span>
             <LogoutButton />
@@ -68,7 +68,7 @@ export function DashboardShell({
       <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-6 md:px-6 md:py-8">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
               {title}
             </h1>
             {subtitle ? (

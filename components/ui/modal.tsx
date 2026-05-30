@@ -62,7 +62,7 @@ export function Modal({
       />
       <div
         className={cn(
-          "relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_18px_40px_rgba(15,23,42,0.18)] animate-scale-in",
+          "relative z-10 flex max-h-[90vh] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_18px_40px_rgba(28,25,23,0.12)] animate-scale-in",
           sizes[size],
           className,
         )}

@@ -275,7 +275,7 @@ function DatePill({ date, didRead }: { date: string; didRead: boolean }) {
       <span className="text-[10px] font-medium uppercase tracking-wide opacity-70">
         {format(parsed, "MMM")}
       </span>
-      <span className="text-base font-semibold leading-none tabular-nums">
+      <span className="text-base font-bold leading-none tabular-nums">
         {format(parsed, "dd")}
       </span>
     </div>
@@ -295,7 +295,7 @@ function DetailSection({
   return (
     <div className="rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3">
       <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
-        <span className="text-indigo-600">{icon}</span>
+        <span className="text-indigo-500">{icon}</span>
         {label}
       </p>
       <p className="mt-1.5 whitespace-pre-wrap text-sm text-slate-800">

@@ -48,7 +48,7 @@ function dayClass(
   didRead: boolean,
 ): string {
   if (isFuture) {
-    return "bg-white border border-dashed border-slate-200";
+    return "bg-white border border-dashed border-slate-300";
   }
   if (!hasReport) {
     return "bg-slate-200";
@@ -125,7 +125,7 @@ export function ReadingHeatmap({
             return (
               <div
                 key={month}
-                className="rounded-xl border border-slate-200 bg-slate-50/40 p-3"
+                className="rounded-xl border border-slate-200 bg-slate-50/60 p-3"
               >
                 <div className="mb-2 flex items-baseline justify-between">
                   <h3 className="text-sm font-semibold text-slate-800">
@@ -162,7 +162,7 @@ export function ReadingHeatmap({
                           report?.booksRead,
                         )}
                         className={cn(
-                          "aspect-square w-full rounded-[4px] transition-transform hover:scale-110",
+                          "heatmap-cell aspect-square w-full",
                           dayClass(isFuture, hasReport, didRead),
                         )}
                         aria-label={key}
